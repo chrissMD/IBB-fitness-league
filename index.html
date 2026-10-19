@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EFF1F4">
+<title>The League</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EFF1F4;
+  --card:#FFFFFF;
+  --ink:#16202E;
+  --muted:#73809A;
+  --line:#D5DAE3;
+  --cobalt:#2B4FE0;
+  --amber:#E0A028;
+  --bad:#C0392B;
+  --radius:10px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#11161F;
+    --card:#19202C;
+    --ink:#E8ECF3;
+    --muted:#8A97AE;
+    --line:#2A3443;
+    --cobalt:#6B8CFF;
+    --amber:#F0BC5A;
+    --bad:#FF8A7A;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Archivo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16px;
+  line-height:1.45;
+  -webkit-text-size-adjust:100%;
+  font-variant-numeric:tabular-nums;
+}
+.wrap{max-width:460px;margin:0 auto;padding:20px 18px 72px}
+button{font:inherit;color:inherit;cursor:pointer}
+input{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cobalt);outline-offset:2px;border-radius:4px}
+.hidden{display:none !important}
+
+/* ---------- masthead ---------- */
+.masthead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:22px}
+.masthead h1{font-size:19px;font-weight:800;letter-spacing:-.02em;margin:0}
+.whoami{background:none;border:0;padding:0;color:var(--muted);font-size:13px;text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- auth ---------- */
+.intro{margin:0 0 26px;color:var(--muted);font-size:15px;max-width:34em}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px}
+.field input{
+  width:100%;padding:11px 12px;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--radius);
+}
+.field input:focus{border-color:var(--cobalt);outline:none}
+.pin{letter-spacing:.5em;font-weight:600}
+.hint{font-size:13px;color:var(--muted);margin:6px 0 0}
+.primary{
+  width:100%;padding:13px;margin-top:6px;background:var(--cobalt);color:#fff;
+  border:0;border-radius:var(--radius);font-weight:700;letter-spacing:-.01em;
+}
+.primary[disabled]{opacity:.55;cursor:default}
+.switcher{display:block;margin:18px auto 0;background:none;border:0;color:var(--muted);font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.error{color:var(--bad);font-size:14px;margin:12px 0 0;min-height:1.4em}
+
+/* ---------- avatars ---------- */
+.av{
+  display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:30px;height:30px;border-radius:50%;line-height:1;font-size:17px;
+  background:hsl(var(--h) 60% 89%);
+}
+@media (prefers-color-scheme:dark){ .av{background:hsl(var(--h) 30% 26%)} }
+
+/* ---------- podium ---------- */
+.podium{margin-bottom:22px}
+.podium h2{font-size:13px;font-weight:500;color:var(--muted);margin:0 0 12px}
+.lead{display:flex;align-items:flex-end;gap:14px}
+.lead .slot{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px}
+.lead .pos{font-size:11px;color:var(--muted)}
+.lead .av{width:46px;height:46px;font-size:25px}
+.lead .slot[data-rank="1"] .av{width:62px;height:62px;font-size:34px;box-shadow:0 0 0 2px var(--paper),0 0 0 4px var(--cobalt)}
+.lead .nm{font-size:13px;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lead .pt{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.lead .slot[data-rank="1"] .pt{color:var(--cobalt)}
+.nobody{color:var(--muted);font-size:14px;margin:0}
+.month{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:18px;padding-top:12px;border-top:1px solid var(--line)}
+.month .lbl{width:100%;font-size:13px;color:var(--muted);margin-bottom:-4px}
+.month .ent{display:flex;align-items:center;gap:7px;font-size:13.5px}
+.month .av{width:24px;height:24px;font-size:14px}
+.month .ent b{font-weight:700}
+
+/* ---------- day card ---------- */
+.day{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;margin-bottom:18px}
+.daynav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.daynav button{
+  width:34px;height:34px;flex:none;background:none;border:1px solid var(--line);
+  border-radius:9px;color:var(--muted);font-size:17px;line-height:1;
+}
+.daynav button[disabled]{opacity:.3;cursor:default}
+.daylabel{font-weight:600;font-size:15px}
+.today{display:block;font-size:12px;color:var(--muted);font-weight:400}
+.score{display:flex;align-items:baseline;gap:9px;margin:14px 0 2px}
+.score .n{font-size:52px;font-weight:800;letter-spacing:-.045em;line-height:.9;transition:transform .22s ease}
+.score .n.bump{transform:translateY(-3px)}
+.score .u{font-size:14px;color:var(--muted)}
+
+/* ---------- steps ---------- */
+.block{margin-bottom:18px}
+.block h2{font-size:15px;font-weight:600;margin:0 0 9px}
+.steprow{display:flex;gap:10px;align-items:stretch}
+.steprow input{
+  flex:1;min-width:0;padding:11px 12px;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--radius);font-weight:600;
+}
+.steprow input:focus{border-color:var(--cobalt);outline:none}
+.steppoint{
+  flex:none;display:flex;align-items:center;padding:0 14px;border-radius:var(--radius);
+  border:1px solid var(--line);font-weight:700;font-size:15px;white-space:nowrap;
+}
+.steppoint[data-tier="half"]{border-color:var(--amber);color:var(--amber)}
+.steppoint[data-tier="full"]{border-color:var(--cobalt);color:var(--cobalt)}
+.ladder{display:flex;gap:14px;margin:8px 0 0;font-size:12.5px;color:var(--muted)}
+.ladder b{font-weight:600;color:var(--ink)}
+
+/* ---------- activities ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  padding:8px 13px;background:var(--card);border:1px solid var(--line);
+  border-radius:999px;font-size:14.5px;font-weight:500;
+}
+.chip[aria-pressed="true"]{background:var(--cobalt);border-color:var(--cobalt);color:#fff;font-weight:600}
+.chip.add{border-style:dashed;color:var(--muted)}
+.newrow{display:flex;gap:8px;margin-top:10px}
+.newrow input{flex:1;min-width:0;padding:10px 12px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius)}
+.newrow input:focus{border-color:var(--cobalt);outline:none}
+.newrow button{padding:0 16px;border:0;border-radius:var(--radius);background:var(--ink);color:var(--paper);font-weight:600}
+.empty{color:var(--muted);font-size:14px;margin:0}
+
+/* ---------- week strip ---------- */
+.strip{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.strip .cell{
+  border:1px solid var(--line);border-radius:8px;background:var(--card);
+  padding:7px 0 8px;text-align:center;
+}
+.strip .cell .d{font-size:11px;color:var(--muted);display:block}
+.strip .cell .p{font-size:16px;font-weight:700;display:block;margin-top:2px}
+.strip .cell[data-state="none"] .p{color:var(--line)}
+.strip .cell[data-state="half"] .p{color:var(--amber)}
+.strip .cell[data-state="full"] .p{color:var(--cobalt)}
+.strip .cell[data-current="1"]{border-color:var(--ink);border-width:1.5px}
+
+/* ---------- table ---------- */
+.tabs{display:flex;gap:16px;margin:0 0 10px}
+.tabs button{background:none;border:0;padding:0 0 4px;color:var(--muted);font-size:14px;border-bottom:2px solid transparent}
+.tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--cobalt)}
+.table{list-style:none;margin:0;padding:0}
+.table li{display:flex;align-items:center;gap:12px;padding:10px 2px;border-bottom:1px solid var(--line)}
+.table li:last-child{border-bottom:0}
+.table .rank{width:18px;color:var(--muted);font-size:14px;flex:none}
+.table .who{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.table .pts{font-weight:700}
+.table li[data-me="1"] .who{font-weight:700}
+.table li[data-me="1"] .pts{color:var(--cobalt)}
+
+/* ---------- status ---------- */
+.status{position:fixed;left:0;right:0;bottom:0;padding:9px 18px;font-size:13px;text-align:center;color:var(--muted);background:var(--paper);border-top:1px solid var(--line)}
+.status[data-kind="error"]{color:var(--bad)}
+.notice{border:1px solid var(--amber);color:var(--amber);border-radius:var(--radius);padding:10px 12px;font-size:13.5px;margin-bottom:18px}
+.keepsafe{border:1.5px solid var(--amber);border-radius:12px;padding:14px 14px 12px;margin-bottom:18px}
+.keepsafe p{margin:0;font-size:14px;line-height:1.5}
+.keepsafe .digits{display:block;font-size:34px;font-weight:800;letter-spacing:.18em;color:var(--amber);margin:8px 0 10px}
+.keepsafe button{background:none;border:0;padding:0;color:var(--muted);font-size:13px;text-decoration:underline;text-underline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ============ auth ============ -->
+  <section id="auth">
+    <div class="masthead"><h1>The League</h1></div>
+    <p class="intro" id="introText">Pick a name and a 4-digit PIN. The PIN is only there so you can get back in on a new phone.</p>
+    <div id="demoNotice" class="notice hidden">Demo mode: nothing is saved. Add your Apps Script URL to <b>API_URL</b> to go live.</div>
+
+    <div class="field">
+      <label for="nameIn">Name</label>
+      <input id="nameIn" autocomplete="off" autocapitalize="words" maxlength="20" placeholder="Marek">
+    </div>
+    <div class="field">
+      <label for="pinIn">PIN</label>
+      <input id="pinIn" class="pin" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="••••">
+      <p class="hint" id="pinHint">Pick four digits future-you will still recognise on a new phone. There is no reset button here, only an awkward message to whoever set this up.</p>
+    </div>
+    <button class="primary" id="authGo">Join the league</button>
+    <p class="error" id="authError" role="alert"></p>
+    <button class="switcher" id="authSwitch">I already have a name</button>
+  </section>
+
+  <!-- ============ app ============ -->
+  <section id="app" class="hidden">
+    <div class="masthead">
+      <h1>The League</h1>
+      <button class="whoami" id="whoami"></button>
+    </div>
+
+    <div class="keepsafe hidden" id="keepsafe">
+      <p id="keepsafeText"></p>
+      <span class="digits" id="keepsafePin"></span>
+      <p>Write it on something that is not this phone. It is the only way back into your name if you lose the phone, wipe the browser, or turn up at the gym on someone else's tablet.</p>
+      <button id="keepsafeGo">Written down</button>
+    </div>
+
+    <section class="podium">
+      <h2>Leading this week</h2>
+      <div class="lead" id="lead"></div>
+      <p class="nobody hidden" id="nobody">No points yet this week. Someone has to go first.</p>
+      <div class="month" id="month"></div>
+    </section>
+
+    <div class="day">
+      <div class="daynav">
+        <button id="prevDay" aria-label="Previous day">‹</button>
+        <div class="daylabel" id="dayLabel">—<span class="today" id="daySub"></span></div>
+        <button id="nextDay" aria-label="Next day">›</button>
+      </div>
+      <div class="score">
+        <span class="n" id="dayScore">0</span>
+        <span class="u" id="dayUnit">points</span>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2>Steps</h2>
+      <div class="steprow">
+        <input id="stepsIn" inputmode="numeric" autocomplete="off" placeholder="0">
+        <div class="steppoint" id="stepPoint" data-tier="none">0</div>
+      </div>
+      <p class="ladder">
+        <span>under 5,000 <b>0</b></span>
+        <span>5,000+ <b>0.5</b></span>
+        <span>8,000+ <b>1</b></span>
+      </p>
+    </div>
+
+    <div class="block">
+      <h2>Everything else</h2>
+      <div class="chips" id="chips"></div>
+      <div class="newrow hidden" id="newRow">
+        <input id="newIn" maxlength="24" autocomplete="off" placeholder="Bouldering" list="allActivities">
+        <datalist id="allActivities"></datalist>
+        <button id="newGo">Add</button>
+      </div>
+      <p class="hint">One point each, once a day.</p>
+    </div>
+
+    <div class="block">
+      <h2>Your week</h2>
+      <div class="strip" id="strip"></div>
+    </div>
+
+    <div class="block">
+      <div class="tabs" role="tablist">
+        <button id="tabWeek" role="tab" aria-selected="true">This week</button>
+        <button id="tabMonth" role="tab" aria-selected="false">30 days</button>
+        <button id="tabAll" role="tab" aria-selected="false">All time</button>
+      </div>
+      <ul class="table" id="table"></ul>
+    </div>
+  </section>
+</div>
+
+<div class="status" id="status" role="status" aria-live="polite"></div>
+
+<script>
+/* =======================================================================
+   1. Point this at your deployed Apps Script web app.
+      Leave it empty to play with a local demo that saves nothing.
+   ======================================================================= */
+var API_URL = "https://script.google.com/macros/s/AKfycbzLl2YguahZB-uvJYaUnbE-59J2FHgOy4XHXaxCm6GGUqCM73uf2TkTCeIVi_eNJ3gXZQ/exec";
+
+/* ---------------------------------------------------------------- utils */
+var STEPS_HALF_AT = 5000, STEPS_FULL_AT = 8000;
+
+function stepPoints(n){
+  if (n >= STEPS_FULL_AT) return 1;
+  if (n >= STEPS_HALF_AT) return 0.5;
+  return 0;
+}
+function tierOf(p){ return p >= 1 ? 'full' : (p > 0 ? 'half' : 'none'); }
+function key(s){ return String(s||'').replace(/\s+/g,' ').trim().toLowerCase(); }
+function fmt(n){ return (Math.round(n*2)/2).toString(); }
+function iso(d){
+  return d.getFullYear() + '-' +
+    String(d.getMonth()+1).padStart(2,'0') + '-' +
+    String(d.getDate()).padStart(2,'0');
+}
+function shiftDay(dateStr, n){
+  var p = dateStr.split('-');
+  var d = new Date(Number(p[0]), Number(p[1])-1, Number(p[2]));
+  d.setDate(d.getDate()+n);
+  return iso(d);
+}
+function prettyDay(dateStr){
+  var p = dateStr.split('-');
+  var d = new Date(Number(p[0]), Number(p[1])-1, Number(p[2]));
+  return d.toLocaleDateString(undefined,{weekday:'long', day:'numeric', month:'short'});
+}
+function $(id){ return document.getElementById(id); }
+
+/* Avatars are worked out from the user id every time the page draws, so
+   nothing about them is saved anywhere. Same id, same animal, every device. */
+var ANIMALS = ['🦊','🦉','🦡','🐗','🦌','🐺','🦔','🦦','🦫','🐢','🦅','🐸',
+               '🐿️','🦭','🐻','🦁','🐯','🐨','🐼','🦘','🐧','🦩','🐙','🦈',
+               '🐬','🦒','🦓','🐘','🦏','🐝'];
+function hashOf(s){
+  var h = 2166136261;
+  for (var i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return Math.abs(h);
+}
+function avatar(id, cls){
+  var h = hashOf(String(id));
+  var el = document.createElement('span');
+  el.className = 'av' + (cls ? ' ' + cls : '');
+  el.style.setProperty('--h', (hashOf('c' + id) % 360));
+  el.textContent = ANIMALS[h % ANIMALS.length];
+  el.setAttribute('aria-hidden', 'true');
+  return el;
+}
+
+/* localStorage is blocked in some preview frames, so fall back to memory */
+var mem = {};
+var store = {
+  get:function(k){ try{ return localStorage.getItem(k); }catch(e){ return mem[k]||null; } },
+  set:function(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k]=v; } },
+  del:function(k){ try{ localStorage.removeItem(k); }catch(e){ delete mem[k]; } }
+};
+
+/* ---------------------------------------------------------------- api */
+function api(payload){
+  if (!API_URL) return Promise.resolve(demo(payload));
+  return fetch(API_URL, {
+    method:'POST',
+    // text/plain keeps this a "simple" request, so the browser skips the
+    // CORS preflight that Apps Script cannot answer.
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body: JSON.stringify(payload)
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(d){
+    if (!d || !d.ok) throw new Error((d && d.error) || 'The server said no.');
+    return d;
+  });
+}
+
+/* ---------------------------------------------------------------- demo backend */
+var demoDb = null;
+function demoSeed(){
+  var today = iso(new Date());
+  demoDb = {
+    users:[{id:'u1',name:'Anna',pin:'0000'},{id:'u2',name:'Jonas',pin:'0000'}],
+    entries:[
+      {u:'u1',d:shiftDay(today,-1),k:'steps',l:'Steps',v:9100,p:1},
+      {u:'u1',d:shiftDay(today,-1),k:'gym',l:'Gym',v:'',p:1},
+      {u:'u1',d:today,k:'volleyball',l:'Volleyball',v:'',p:1},
+      {u:'u2',d:shiftDay(today,-2),k:'cycling',l:'Cycling',v:'',p:1},
+      {u:'u2',d:today,k:'steps',l:'Steps',v:6200,p:0.5}
+    ],
+    acts:[{key:'gym',label:'Gym'},{key:'cycling',label:'Cycling'},
+          {key:'volleyball',label:'Volleyball'},{key:'swimming',label:'Swimming'}]
+  };
+}
+function demo(req){
+  if (!demoDb) demoSeed();
+  var db = demoDb, i;
+  if (req.action === 'register'){
+    for (i=0;i<db.users.length;i++) if (key(db.users[i].name) === key(req.name))
+      return {ok:false, error:'"'+db.users[i].name+'" is taken. Pick another name.'};
+    var u = {id:'u'+(db.users.length+1), name:String(req.name).trim(), pin:req.pin};
+    db.users.push(u);
+    return {ok:true, userId:u.id, name:u.name};
+  }
+  if (req.action === 'reclaim'){
+    for (i=0;i<db.users.length;i++) if (key(db.users[i].name) === key(req.name)){
+      if (db.users[i].pin !== req.pin) return {ok:false, error:'That PIN does not match.'};
+      return {ok:true, userId:db.users[i].id, name:db.users[i].name};
+    }
+    return {ok:false, error:'No one is registered under that name yet.'};
+  }
+  if (req.action === 'saveDay'){
+    db.entries = db.entries.filter(function(e){ return !(e.u===req.userId && e.d===req.date); });
+    var steps = Number(req.steps)||0;
+    if (steps>0) db.entries.push({u:req.userId,d:req.date,k:'steps',l:'Steps',v:steps,p:stepPoints(steps)});
+    var seen = {};
+    (req.activities||[]).forEach(function(label){
+      var k = key(label);
+      if (!k || k==='steps' || seen[k]) return;
+      seen[k]=true;
+      db.entries.push({u:req.userId,d:req.date,k:k,l:label,v:'',p:1});
+      if (!db.acts.some(function(a){return a.key===k;})) db.acts.push({key:k,label:label});
+    });
+  }
+  return demoState(req.userId, req.date);
+}
+function demoState(userId, date){
+  var db = demoDb;
+  var me = db.users.filter(function(u){return u.id===userId;})[0];
+  if (!me) return {ok:false, error:'Unknown user.'};
+  var p = date.split('-');
+  var dt = new Date(Number(p[0]), Number(p[1])-1, Number(p[2]));
+  var monday = shiftDay(date, -((dt.getDay()+6)%7));
+  var sunday = shiftDay(monday, 6);
+  var monthStart = shiftDay(date, -29);
+  var board = db.users.map(function(u){
+    var all=0, wk=0, mo=0;
+    db.entries.forEach(function(e){
+      if (e.u!==u.id) return;
+      all+=e.p;
+      if (e.d>=monthStart && e.d<=date) mo+=e.p;
+      if (e.d>=monday && e.d<=sunday) wk+=e.p;
+    });
+    return {id:u.id,name:u.name,week:wk,month:mo,all:all};
+  });
+  var week=[], i;
+  for (i=0;i<7;i++){
+    var ds = shiftDay(monday,i), tot=0;
+    db.entries.forEach(function(e){ if (e.u===userId && e.d===ds) tot+=e.p; });
+    week.push({date:ds, points:tot});
+  }
+  var day = {steps:0, activities:[]};
+  db.entries.forEach(function(e){
+    if (e.u!==userId || e.d!==date) return;
+    if (e.k==='steps') day.steps = Number(e.v)||0;
+    else day.activities.push({key:e.k,label:e.l});
+  });
+  return {ok:true, me:{id:me.id,name:me.name}, date:date, day:day,
+          board:board, week:week, suggestions:db.acts.slice()};
+}
+
+/* ---------------------------------------------------------------- state */
+var state = {
+  userId: store.get('fl.userId') || '',
+  date: iso(new Date()),
+  day: {steps:0, activities:[]},
+  board: [], week: [], suggestions: [],
+  tab: 'week',
+  mode: 'register'
+};
+var saveTimer = null;
+
+function status(msg, kind){
+  var el = $('status');
+  el.textContent = msg || '';
+  el.setAttribute('data-kind', kind || 'info');
+}
+
+/* ---------------------------------------------------------------- auth */
+function setMode(mode){
+  state.mode = mode;
+  $('introText').textContent = mode === 'register'
+    ? 'Pick a name and a 4-digit PIN. The PIN is only there so you can get back in on a new phone.'
+    : 'Enter the name you registered with and your PIN.';
+  $('authGo').textContent = mode === 'register' ? 'Join the league' : 'Continue';
+  $('pinHint').classList.toggle('hidden', mode !== 'register');
+  $('authSwitch').textContent = mode === 'register' ? 'I already have a name' : 'I am new here';
+  $('authError').textContent = '';
+}
+
+function submitAuth(){
+  var name = $('nameIn').value.replace(/\s+/g,' ').trim();
+  var pin = $('pinIn').value.trim();
+  if (name.length < 2) return ($('authError').textContent = 'Your name needs at least 2 characters.');
+  if (!/^\d{4}$/.test(pin)) return ($('authError').textContent = 'The PIN must be 4 digits.');
+
+  $('authGo').disabled = true;
+  $('authError').textContent = '';
+  status('Checking…');
+
+  var joining = state.mode === 'register';
+  api({action: state.mode, name:name, pin:pin})
+    .then(function(res){
+      state.userId = res.userId;
+      store.set('fl.userId', res.userId);
+      if (joining) {
+        $('keepsafeText').textContent = 'You are in, ' + res.name + '. Your PIN is';
+        $('keepsafePin').textContent = pin.split('').join(' ');
+        $('keepsafe').classList.remove('hidden');
+      }
+      return load();
+    })
+    .catch(function(err){
+      $('authError').textContent = err.message;
+      status('');
+    })
+    .then(function(){ $('authGo').disabled = false; });
+}
+
+function signOut(){
+  store.del('fl.userId');
+  state.userId = '';
+  $('app').classList.add('hidden');
+  $('auth').classList.remove('hidden');
+  $('nameIn').value = '';
+  $('pinIn').value = '';
+  setMode('reclaim');
+  status('');
+}
+
+/* ---------------------------------------------------------------- load + save */
+function load(){
+  status('Loading…');
+  return api({action:'state', userId:state.userId, date:state.date})
+    .then(apply)
+    .then(function(){ status(''); })
+    .catch(function(err){
+      if (/unknown user/i.test(err.message)) return signOut();
+      status(err.message, 'error');
+    });
+}
+
+function queueSave(){
+  render();
+  status('Saving…');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    api({
+      action:'saveDay',
+      userId:state.userId,
+      date:state.date,
+      steps:state.day.steps,
+      activities:state.day.activities.map(function(a){ return a.label; })
+    })
+    .then(function(res){ apply(res); status('Saved'); })
+    .catch(function(err){ status(err.message, 'error'); });
+  }, 700);
+}
+
+function apply(res){
+  state.day = res.day;
+  state.board = res.board;
+  state.week = res.week;
+  state.suggestions = res.suggestions;
+  $('auth').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  $('whoami').textContent = res.me.name;
+  render();
+}
+
+/* ---------------------------------------------------------------- render */
+var lastScore = null;
+
+function render(){
+  $('dayLabel').childNodes[0].nodeValue = prettyDay(state.date);
+  $('daySub').textContent = state.date === iso(new Date()) ? 'today' : '';
+  $('nextDay').disabled = state.date >= iso(new Date());
+
+  var sp = stepPoints(state.day.steps);
+  var total = sp + state.day.activities.length;
+  $('dayScore').textContent = fmt(total);
+  $('dayUnit').textContent = total === 1 ? 'point' : 'points';
+  if (lastScore !== null && lastScore !== total){
+    var n = $('dayScore');
+    n.classList.add('bump');
+    setTimeout(function(){ n.classList.remove('bump'); }, 220);
+  }
+  lastScore = total;
+
+  if (document.activeElement !== $('stepsIn')){
+    $('stepsIn').value = state.day.steps ? state.day.steps : '';
+  }
+  $('stepPoint').textContent = fmt(sp);
+  $('stepPoint').setAttribute('data-tier', tierOf(sp));
+
+  renderChips();
+  renderStrip();
+  renderPodium();
+  renderTable();
+}
+
+function renderChips(){
+  var box = $('chips');
+  box.innerHTML = '';
+  var picked = {};
+  state.day.activities.forEach(function(a){ picked[a.key] = a.label; });
+
+  var list = [];
+  var seen = {};
+  state.day.activities.forEach(function(a){
+    if (!seen[a.key]){ seen[a.key]=true; list.push(a); }
+  });
+  state.suggestions.forEach(function(a){
+    if (a.key === 'steps' || seen[a.key]) return;
+    seen[a.key] = true;
+    list.push(a);
+  });
+
+  list.forEach(function(a){
+    var b = document.createElement('button');
+    b.className = 'chip';
+    b.type = 'button';
+    b.textContent = a.label;
+    b.setAttribute('aria-pressed', picked[a.key] ? 'true' : 'false');
+    b.addEventListener('click', function(){ toggleActivity(a); });
+    box.appendChild(b);
+  });
+
+  var add = document.createElement('button');
+  add.className = 'chip add';
+  add.type = 'button';
+  add.textContent = list.length ? '+ Add' : '+ Add your first activity';
+  add.addEventListener('click', function(){
+    $('newRow').classList.toggle('hidden');
+    if (!$('newRow').classList.contains('hidden')) $('newIn').focus();
+  });
+  box.appendChild(add);
+
+  var dl = $('allActivities');
+  dl.innerHTML = '';
+  state.suggestions.forEach(function(a){
+    var o = document.createElement('option');
+    o.value = a.label;
+    dl.appendChild(o);
+  });
+}
+
+function toggleActivity(a){
+  var i = -1;
+  state.day.activities.forEach(function(x, idx){ if (x.key === a.key) i = idx; });
+  if (i >= 0) state.day.activities.splice(i, 1);
+  else state.day.activities.push({key:a.key, label:a.label});
+  queueSave();
+}
+
+function addActivity(){
+  var label = $('newIn').value.replace(/\s+/g,' ').trim();
+  if (!label) return;
+  if (key(label) === 'steps'){
+    status('Steps are counted above.', 'error');
+    return;
+  }
+  var k = key(label);
+  if (!state.day.activities.some(function(a){ return a.key === k; })){
+    state.day.activities.push({key:k, label:label});
+  }
+  if (!state.suggestions.some(function(a){ return a.key === k; })){
+    state.suggestions.push({key:k, label:label});
+  }
+  $('newIn').value = '';
+  $('newRow').classList.add('hidden');
+  queueSave();
+}
+
+function renderStrip(){
+  var box = $('strip');
+  box.innerHTML = '';
+  var names = ['M','T','W','T','F','S','S'];
+  state.week.forEach(function(d, i){
+    var cell = document.createElement('button');
+    cell.className = 'cell';
+    cell.type = 'button';
+    cell.setAttribute('data-state', tierOf(d.points));
+    cell.setAttribute('data-current', d.date === state.date ? '1' : '0');
+    cell.setAttribute('aria-label', prettyDay(d.date) + ': ' + fmt(d.points) + ' points');
+    cell.innerHTML = '<span class="d">' + names[i] + '</span><span class="p">' + fmt(d.points) + '</span>';
+    cell.addEventListener('click', function(){
+      if (d.date > iso(new Date())) return;
+      state.date = d.date;
+      load();
+    });
+    box.appendChild(cell);
+  });
+}
+
+function topThree(field){
+  return state.board.slice()
+    .filter(function(r){ return r[field] > 0; })
+    .sort(function(a, b){ return b[field] - a[field] || a.name.localeCompare(b.name); })
+    .slice(0, 3);
+}
+
+function renderPodium(){
+  var box = $('lead');
+  box.innerHTML = '';
+  var top = topThree('week');
+  $('nobody').classList.toggle('hidden', top.length > 0);
+  box.classList.toggle('hidden', top.length === 0);
+
+  // Second place stands on the left of the winner, third on the right.
+  var order = [[1,0],[0,1],[2,2]].slice(0, top.length === 1 ? 1 : top.length);
+  if (top.length === 2) order = [[1,0],[0,1]];
+  if (top.length === 1) order = [[0,0]];
+
+  order.forEach(function(pair){
+    var r = top[pair[0]];
+    if (!r) return;
+    var slot = document.createElement('div');
+    slot.className = 'slot';
+    slot.setAttribute('data-rank', pair[0] + 1);
+    slot.style.order = pair[1];
+
+    var pos = document.createElement('span');
+    pos.className = 'pos';
+    pos.textContent = ['1st','2nd','3rd'][pair[0]];
+    var nm = document.createElement('span');
+    nm.className = 'nm';
+    nm.textContent = r.name;
+    var pt = document.createElement('span');
+    pt.className = 'pt';
+    pt.textContent = fmt(r.week);
+
+    slot.appendChild(pos);
+    slot.appendChild(avatar(r.id));
+    slot.appendChild(nm);
+    slot.appendChild(pt);
+    box.appendChild(slot);
+  });
+
+  var m = $('month');
+  m.innerHTML = '';
+  var lbl = document.createElement('span');
+  lbl.className = 'lbl';
+  lbl.textContent = 'Last 30 days';
+  m.appendChild(lbl);
+  var month = topThree('month');
+  if (!month.length){
+    var none = document.createElement('span');
+    none.className = 'ent';
+    none.textContent = 'Nothing logged yet.';
+    m.appendChild(none);
+    return;
+  }
+  month.forEach(function(r){
+    var ent = document.createElement('span');
+    ent.className = 'ent';
+    ent.appendChild(avatar(r.id));
+    var t = document.createElement('span');
+    t.innerHTML = '';
+    t.textContent = r.name + ' ';
+    var b = document.createElement('b');
+    b.textContent = fmt(r.month);
+    t.appendChild(b);
+    ent.appendChild(t);
+    m.appendChild(ent);
+  });
+}
+
+function renderTable(){
+  var ul = $('table');
+  ul.innerHTML = '';
+  var field = state.tab;
+  var rows = state.board.slice().sort(function(a, b){
+    return b[field] - a[field] || a.name.localeCompare(b.name);
+  });
+  rows.forEach(function(r, i){
+    var li = document.createElement('li');
+    li.setAttribute('data-me', r.id === state.userId ? '1' : '0');
+    var rank = document.createElement('span');
+    rank.className = 'rank';
+    rank.textContent = (i + 1);
+    var who = document.createElement('span');
+    who.className = 'who';
+    who.textContent = r.name;
+    var pts = document.createElement('span');
+    pts.className = 'pts';
+    pts.textContent = fmt(r[field]);
+    li.appendChild(rank);
+    li.appendChild(avatar(r.id));
+    li.appendChild(who);
+    li.appendChild(pts);
+    ul.appendChild(li);
+  });
+  $('tabWeek').setAttribute('aria-selected', field === 'week');
+  $('tabMonth').setAttribute('aria-selected', field === 'month');
+  $('tabAll').setAttribute('aria-selected', field === 'all');
+}
+
+/* ---------------------------------------------------------------- wiring */
+$('authGo').addEventListener('click', submitAuth);
+$('pinIn').addEventListener('keydown', function(e){ if (e.key === 'Enter') submitAuth(); });
+$('nameIn').addEventListener('keydown', function(e){ if (e.key === 'Enter') $('pinIn').focus(); });
+$('pinIn').addEventListener('input', function(){ this.value = this.value.replace(/\D/g,''); });
+$('authSwitch').addEventListener('click', function(){
+  setMode(state.mode === 'register' ? 'reclaim' : 'register');
+});
+$('whoami').addEventListener('click', signOut);
+$('keepsafeGo').addEventListener('click', function(){
+  $('keepsafe').classList.add('hidden');
+  $('keepsafePin').textContent = '';
+});
+
+$('prevDay').addEventListener('click', function(){ state.date = shiftDay(state.date,-1); load(); });
+$('nextDay').addEventListener('click', function(){
+  if (state.date >= iso(new Date())) return;
+  state.date = shiftDay(state.date, 1);
+  load();
+});
+
+$('stepsIn').addEventListener('input', function(){
+  this.value = this.value.replace(/\D/g,'').slice(0,6);
+  state.day.steps = Number(this.value) || 0;
+  queueSave();
+});
+$('newGo').addEventListener('click', addActivity);
+$('newIn').addEventListener('keydown', function(e){ if (e.key === 'Enter') addActivity(); });
+
+$('tabWeek').addEventListener('click', function(){ state.tab = 'week'; renderTable(); });
+$('tabMonth').addEventListener('click', function(){ state.tab = 'month'; renderTable(); });
+$('tabAll').addEventListener('click', function(){ state.tab = 'all'; renderTable(); });
+
+/* ---------------------------------------------------------------- start */
+if (!API_URL) $('demoNotice').classList.remove('hidden');
+setMode('register');
+if (state.userId) load();
+</script>
+</body>
+</html>
